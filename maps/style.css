@@ -1,4 +1,11 @@
 #map {
-  height: 800px;
+  height: 95%;
   width: 100%;
+}
+
+html,
+body {
+  height: 97%;
+  margin: 4px;
+  padding: 4px;
 }
