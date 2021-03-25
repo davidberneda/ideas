@@ -36,12 +36,12 @@ function initMap() {
     list += "<a href='javascript:centerTo("+place+")'>" + place.title + "</a></br>"    
   }
 
-  add(agade)
-  add(babili)
-  add(barsipa)
-  add(emeslam)
-  add(eridu)
-  add(esarra)
+  add("agade")
+  add("babili")
+  add("barsipa")
+  add("emeslam")
+  add("eridu")
+  add("esarra")
   
   document.getElementById('places').innerHTML = list
 
