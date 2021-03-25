@@ -14,7 +14,7 @@ function initMap() {
   map = new google.maps.Map(document.getElementById("map"), { 
                  zoom: 8, 
                  center: babili_pos, 
-                 mapTypeId: 'satellite'
+                 mapTypeId: 'hybrid'
         });
 
   agade = new google.maps.Marker({ title: "Agade / Tell Mohammed", label: "Agade",
