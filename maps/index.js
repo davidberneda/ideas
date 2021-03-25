@@ -33,7 +33,7 @@ function initMap() {
   list=""
 
   function add(place) {
-    list += "<a href='javascript:centerTo('+place+')'>" + place.title + "</a></br>"    
+    list += "<a href='javascript:centerTo("+place+")'>" + place.title + "</a></br>"    
   }
 
   add(agade)
@@ -46,7 +46,13 @@ function initMap() {
   document.getElementById('places').innerHTML = list
 
   const placesPath = new google.maps.Polyline({
-    path: [babili.position, eridu.position],
+    path: [  eridu.position,
+             esarra.position,
+             barsipa.position,
+             babili.position,
+             emeslam.position,
+             agade.position 
+          ],
     geodesic: true,
     strokeColor: "#FF0000",
     strokeOpacity: 1.0,
