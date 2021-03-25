@@ -3,7 +3,7 @@ function centerTo(place) {
 }
 
 var map, 
-    agade, babili, barsipa, emeslam, eridu, esarra;
+    agade, babili, barsipa, emeslam, eridu, esarra, etemenanki, sippar;
 
 function initMap() {
 
@@ -36,6 +36,11 @@ function initMap() {
                      position: { lat: 32.1261, lng: 45.2308 }, map: map,
                      icon: image });
 
+  etemenanki = new google.maps.Marker({ title: "Etemenanki", label: "Etemenanki",
+                     position: { lat: 32.536389, lng: 44.420833 }, map: map, });
+
+  sippar = new google.maps.Marker({ title: "Sippar / Abu Habba", label: "Sippar",
+                     position: { lat: 33.099832, lng: 44.298344 }, map: map, });
 
   list=""
 
@@ -49,6 +54,8 @@ function initMap() {
   add("emeslam",emeslam)
   add("eridu",eridu)
   add("esarra",esarra)
+  add("etemenanki",etemenanki)
+  add("sippar",sippar)
   
   document.getElementById('places').innerHTML = list
 
