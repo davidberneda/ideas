@@ -11,7 +11,11 @@ function initMap() {
 
   const babili_pos = { lat: 32.536389, lng: 44.420833 };
 
-  map = new google.maps.Map(document.getElementById("map"), { zoom: 8, center: babili_pos, });
+  map = new google.maps.Map(document.getElementById("map"), { 
+                 zoom: 8, 
+                 center: babili_pos, 
+                 mapTypeId: 'satellite'
+        });
 
   agade = new google.maps.Marker({ title: "Agade / Tell Mohammed", label: "Agade",
                      position: { lat: 33.90962758243391, lng: 44.53480309997145 }, map: map, });
