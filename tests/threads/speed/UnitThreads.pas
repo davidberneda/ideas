@@ -22,13 +22,17 @@ type
 
   TFormThreads = class(TForm)
     Memo1: TMemo;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
+
+    procedure RunTest<T>(const Test:TTest<T>; const Value:T);
+    procedure RunTests;
   public
     { Public declarations }
 
-    procedure RunTest<T>(const Test:TTest<T>; const Value:T);
   end;
 
 var
@@ -69,9 +73,8 @@ begin
 
     workers[i] := TTask.Run(
       procedure
-      var Index : Integer;
       begin
-        for Index:=Min to Max do
+        for var Index:=Min to Max do
             _Items[Index]:=Value;
       end)
   end;
@@ -80,9 +83,8 @@ begin
 end;
 
 procedure TTest<T>.Simple(const Value:T);
-var Index : Integer;
 begin
-  for Index:=0 to QUANTITY-1 do
+  for var Index:=0 to QUANTITY-1 do
       Items[Index]:=Value;
 end;
 
@@ -113,7 +115,7 @@ type
 const
   Foo : TFoo=(A:1; B:2; C:3; D:3.14; E:4.15; S:6.7);
 
-procedure TFormThreads.FormCreate(Sender: TObject);
+procedure TFormThreads.RunTests;
 var D : TTest<TFoo>;
     S : TTest<String>;
 begin
@@ -121,6 +123,16 @@ begin
 
   RunTest<TFoo>(D,Foo);  // Multi-cpu is 500% FASTER than single cpu
   RunTest<String>(S,'Hello');   // Multi-cpu is 300% SLOWER than single cpu
+end;
+
+procedure TFormThreads.Button1Click(Sender: TObject);
+begin
+  RunTests;
+end;
+
+procedure TFormThreads.FormCreate(Sender: TObject);
+begin
+  RunTests;
 end;
 
 end.

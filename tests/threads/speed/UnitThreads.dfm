@@ -19,4 +19,13 @@ object FormThreads: TFormThreads
     Height = 305
     TabOrder = 0
   end
+  object Button1: TButton
+    Left = 8
+    Top = 360
+    Width = 75
+    Height = 25
+    Caption = 'Run again'
+    TabOrder = 1
+    OnClick = Button1Click
+  end
 end
