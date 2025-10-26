@@ -14,10 +14,13 @@ type
 
     var
       Items : Array of T;
+
+    procedure Check(const Value:T);
+    class function GetWorker(min, max: Integer; const items: TArray<T>; const value: T): TProc; static;
   public
     procedure Init;
     procedure Multi(const Value:T);
-    procedure Simple(const Value:T);
+    procedure Simple(const Min,Max:Integer; const Value:T);
   end;
 
   TFormThreads = class(TForm)
@@ -43,7 +46,40 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Diagnostics, System.Threading;
+  System.Diagnostics, System.Threading, System.TypInfo;
+
+procedure TTest<T>.Check;
+var Index : Integer;
+begin
+  if GetTypeKind(T) = tkRecord then
+  begin
+    for Index:=0 to QUANTITY-1 do
+        if not CompareMem(@Items[Index],@Value,SizeOf(Value)) then
+           raise Exception.Create('FAIL');
+  end
+  else
+  for Index:=0 to QUANTITY-1 do
+      if Items[Index]<>Value then
+         raise Exception.Create('FAIL');
+end;
+
+class function TTest<T>.GetWorker(min, max: Integer; const items: TArray<T>; const value: T): TProc;
+var _items: TArray<T>;
+begin
+  _items := items;
+
+  if GetTypeKind(T) = tkUString then
+     UniqueString(PString(@value)^);
+
+//  {$R-,Q-}
+
+  Result := procedure
+    var Index : Integer;
+    begin
+      for Index:=Min to Max do
+          _items[Index]:=Value;
+    end;
+end;
 
 procedure TTest<T>.Init;
 begin
@@ -55,12 +91,9 @@ var
   workerCount: Integer;
   workers: TArray<ITask>;
   i, min, max: Integer;
-  _Items : Array of T;
 begin
   workerCount := TThread.ProcessorCount;
   SetLength(workers, workerCount);
-
-  _Items:=Items;
 
   for i := 0 to workerCount - 1 do
   begin
@@ -71,37 +104,43 @@ begin
     else
        max := QUANTITY - 1;
 
-    workers[i] := TTask.Run(
-      procedure
-      begin
-        for var Index:=Min to Max do
-            _Items[Index]:=Value;
-      end)
+    workers[i] := TTask.Run(GetWorker(min, max, items, value));
   end;
 
   TTask.WaitForAll(workers);
 end;
 
-procedure TTest<T>.Simple(const Value:T);
+procedure TTest<T>.Simple(const Min,Max:Integer; const Value:T);
+var P : TProc;
 begin
-  for var Index:=0 to QUANTITY-1 do
-      Items[Index]:=Value;
+  P:=GetWorker(min, max, items, value);
+  P();
 end;
 
 procedure TFormThreads.RunTest<T>(const Test:TTest<T>; const Value:T);
 var t1 : TStopwatch;
 begin
+  Memo1.Lines.Add(GetTypeName(TypeInfo(T)));
+
   Test.Init;
 
   t1:=TStopwatch.StartNew;
 
-  Test.Simple(Value);
+  Test.Simple(0,Test.QUANTITY-1,Value);
   Memo1.Lines.Add('Simple: '+t1.ElapsedMilliseconds.ToString);
+
+  Test.Check(Value);
+
+  Test.Simple(0,Test.QUANTITY-1,Default(T)); // Reset
 
   t1:=TStopwatch.StartNew;
 
   Test.Multi(Value);
   Memo1.Lines.Add('Multi: '+t1.ElapsedMilliseconds.ToString);
+
+  Test.Check(Value);
+
+  Memo1.Lines.Add('');
 end;
 
 type
@@ -116,13 +155,15 @@ const
   Foo : TFoo=(A:1; B:2; C:3; D:3.14; E:4.15; S:6.7);
 
 procedure TFormThreads.RunTests;
-var D : TTest<TFoo>;
+var F : TTest<TFoo>;
     S : TTest<String>;
+    D : TTest<Double>;
 begin
   Memo1.Clear;
 
-  RunTest<TFoo>(D,Foo);  // Multi-cpu is 500% FASTER than single cpu
-  RunTest<String>(S,'Hello');   // Multi-cpu is 300% SLOWER than single cpu
+  RunTest<TFoo>(F,Foo);
+  RunTest<Double>(D,3.1415);
+  RunTest<String>(S,'Hello');
 end;
 
 procedure TFormThreads.Button1Click(Sender: TObject);
