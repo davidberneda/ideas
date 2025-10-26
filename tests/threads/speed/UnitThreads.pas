@@ -2,6 +2,12 @@ unit UnitThreads;
 
 interface
 
+{
+  See this thread, with hints and fixes by Mr. Stefan Glienke
+
+  https://en.delphipraxis.net/topic/14612-string-type-breaks-threading-speed-how-to-solve
+}
+
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
