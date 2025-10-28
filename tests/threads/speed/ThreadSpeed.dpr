@@ -1,9 +1,9 @@
 program ThreadSpeed;
 
 uses
-//  FastMM5,
   Vcl.Forms,
-  UnitThreads in 'UnitThreads.pas' {FormThreads};
+  UnitThreads in 'UnitThreads.pas' {FormThreads},
+  UnitThreadsString in 'UnitThreadsString.pas' {FormThreads2};
 
 {$R *.res}
 
@@ -13,6 +13,6 @@ begin
   {$ENDIF}
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TFormThreads, FormThreads);
+  Application.CreateForm(TFormThreads2, FormThreads2);
   Application.Run;
 end.

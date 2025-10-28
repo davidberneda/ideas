@@ -131,6 +131,9 @@
         <DCCReference Include="UnitThreads.pas">
             <Form>FormThreads</Form>
         </DCCReference>
+        <DCCReference Include="UnitThreadsString.pas">
+            <Form>FormThreads2</Form>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
